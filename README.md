@@ -1,16 +1,38 @@
-# React + Vite
+# PrepAI – AI Interview Preparation Platform 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a full-stack web application designed to simulate real interview experiences and help users prepare effectively.
 
-Currently, two official plugins are available:
+## 🔹 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* Mock interview system
+* Resume upload & analysis
+* Performance tracking dashboard
+* Interactive UI
 
-## React Compiler
+## ⚠️ Note
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This project is a **demo version**.
 
-## Expanding the ESLint configuration
+Some AI-powered features are limited because production-level API keys (e.g., OpenAI) are not integrated due to cost constraints.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🎯 Goal
+
+The main goal of this project is to build a **complete full-stack AI application**, combining:
+
+* Frontend (React)
+* Backend (Node.js)
+* AI integration (LLMs)
+
+This project demonstrates the **architecture, workflow, and implementation** of such a system.
+
+## 🚀 Future Improvements
+
+* Full OpenAI integration
+* Real-time AI feedback
+* Advanced interview analytics
+* Scalable deployment
+
+## 🌐 Live Demo
+
+Frontend: https://prep-ai-gold.vercel.app
+Backend: https://prep-ai-backend-g2t3.onrender.com

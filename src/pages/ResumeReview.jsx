@@ -72,7 +72,7 @@ function ResumeReview() {
     formData.append("resume", file);
 
     try {
-      const res = await fetch("http://localhost:5000/upload", {
+      const res = await fetch("https://prep-ai-backend-g2t3.onrender.com/upload", {
         method: "POST",
         body: formData
       });

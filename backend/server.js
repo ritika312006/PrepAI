@@ -1,10 +1,15 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const Groq = require("groq-sdk");
 
 const app = express();
+
+// Groq AI Setup
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.use(cors());
 app.use(express.json());
@@ -312,6 +317,115 @@ app.post("/evaluate-answer", (req, res) => {
     console.error("Evaluate answer error:", error);
     res.status(500).json({
       message: "Failed to evaluate answer",
+      error: error.message
+    });
+  }
+});
+
+// ============================================
+// AI ROUTE USING GROQ
+// ============================================
+app.post("/ai-evaluate", async (req, res) => {
+  try {
+    const { topic, question, answer, type } = req.body;
+
+    if (!topic || !question || answer === undefined) {
+      return res.status(400).json({
+        message: "Topic, question, and answer are required"
+      });
+    }
+
+   const prompt = `You are an expert technical interviewer evaluating a candidate's answer.
+
+Interview Type: ${type || "theory"}
+Topic: ${topic}
+Question: ${question}
+Candidate's Answer: ${answer || "No answer provided"}
+
+Please evaluate the answer and respond in this exact JSON format only, no extra text:
+{
+  "score": <number from 0 to 7>,
+  "feedback": "<one sentence overall feedback>",
+  "strength": "<one sentence about what was good>",
+  "improvement": "<one sentence about what to improve>",
+  "model_answer": "<write a complete correct answer to this question in 3-4 sentences>"
+}`;
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.1-8b-instant",
+      temperature: 0.5,
+      max_tokens: 200
+    });
+
+    const text = chatCompletion.choices[0]?.message?.content || "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(clean);
+
+    res.json(parsed);
+  } catch (error) {
+    console.error("AI evaluation error:", error);
+    res.status(500).json({
+      message: "AI evaluation failed",
+      error: error.message
+    });
+  }
+});
+
+// ============================================
+// AI RESUME REVIEW ROUTE USING GROQ
+// ============================================
+app.post("/ai-resume-review", async (req, res) => {
+  try {
+    const { resumeText } = req.body;
+
+    if (!resumeText) {
+      return res.status(400).json({
+        message: "Resume text is required"
+      });
+    }
+
+    const prompt = `You are an expert resume reviewer and career coach. Review this resume and respond in this exact JSON format only, no extra text:
+{
+  "score": <number from 0 to 100>,
+  "overall_feedback": "<2-3 sentence overall review of the resume>",
+  "strengths": [
+    "<strength 1>",
+    "<strength 2>",
+    "<strength 3>"
+  ],
+  "suggestions": [
+    "<suggestion 1>",
+    "<suggestion 2>",
+    "<suggestion 3>",
+    "<suggestion 4>"
+  ],
+  "missing_skills": [
+    "<missing or weak area 1>",
+    "<missing or weak area 2>",
+    "<missing or weak area 3>"
+  ],
+  "ats_score": <number from 0 to 100>
+}
+
+Resume Content:
+${resumeText}`;
+
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.1-8b-instant",
+      temperature: 0.5,
+      max_tokens: 800
+    });
+
+    const text = chatCompletion.choices[0]?.message?.content || "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(clean);
+
+    res.json(parsed);
+  } catch (error) {
+    console.error("AI resume review error:", error);
+    res.status(500).json({
+      message: "AI resume review failed",
       error: error.message
     });
   }

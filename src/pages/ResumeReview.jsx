@@ -40,7 +40,7 @@ function ResumeReview() {
       const formData = new FormData();
       formData.append("resume", file);
 
-      const res = await fetch("http://localhost:5000/upload", {
+      const res = await fetch("https://prepai-backend-4lx6.onrender.com/upload", {
         method: "POST",
         body: formData
       });
@@ -71,7 +71,7 @@ function ResumeReview() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/ai-resume-review", {
+      const res = await fetch("https://prepai-backend-4lx6.onrender.com/ai-resume-review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ resumeText })

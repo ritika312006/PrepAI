@@ -234,7 +234,7 @@ function MockInterview() {
       let questionList = [];
       if (interviewType === "theory") {
         try {
-          const res = await fetch(`http://localhost:5000/questions/${selectedTopic}`);
+          const res = await fetch(`https://prepai-backend-4lx6.onrender.com/questions/${selectedTopic}`);
           const data = await res.json();
           if (res.ok && data.questions && data.questions.length > 0) {
             questionList = data.questions;
@@ -273,7 +273,7 @@ function MockInterview() {
       let evaluationData = null;
       const answerToEvaluate = isSkip ? "" : answer;
       try {
-        const res = await fetch("http://localhost:5000/ai-evaluate", {
+        const res = await fetch("https://prepai-backend-4lx6.onrender.com/ai-evaluate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
